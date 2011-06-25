@@ -1,5 +1,6 @@
 #include <Windows.h>
-//test
+#include <memory>
+#include "BlankDemo.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -27,7 +28,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 	RECT rc = { 0, 0, 640, 480 };
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, false);
 
-	HWND hwnd = CreateWindow( "DX11BookWindowClass", "Blank Win32 Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
+	HWND hwnd = CreateWindow( "DX11BookWindowClass", "Blank Direct3D 11 Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
 								rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
 	if(!hwnd)
@@ -37,7 +38,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 
 	ShowWindow( hwnd, cmdShow );
 
+	
+	std::auto_ptr<Dx11DemoBase> demo( new BlankDemo() );
 	// Demo init
+	bool result = demo->Initialize( hInstance, hwnd );
+
+	// Error reporting if there is an issue
+	if( result == false )
+	{
+		return -1;
+	}
 
 	MSG msg = { 0 };
 
@@ -50,13 +60,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 		}
 		else
 		{
-			// Update
-			// Draw
+			// Update and draw
+			demo->Update( 0.0f );
+			demo->Render();
 		}
 	}
 
 	// Demo shutdown
-
+	demo->Shutdown();
 
 	return static_cast<int>( msg.wParam );
 }
