@@ -21,7 +21,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureDemo.cpp">
+    <ClCompile Include="GameSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSpriteDemo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,12 +32,15 @@
     <ClInclude Include="Dx11DemoBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureDemo.h">
+    <ClInclude Include="GameSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSpriteDemo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SolidGreenColor.fx">
+    <None Include="Shaders.fx">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

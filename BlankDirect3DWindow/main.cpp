@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <memory>
-#include "TextureDemo.h"
+#include "GameSpriteDemo.h"
+#include <time.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -25,7 +26,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 		return -1;
 	}
 
-	RECT rc = { 0, 0, 640, 480 };
+	RECT rc = { 0, 0, 800, 600 };
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, false);
 
 	HWND hwnd = CreateWindow( "DX11BookWindowClass", "Blank Direct3D 11 Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
@@ -39,7 +40,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 	ShowWindow( hwnd, cmdShow );
 
 	
-	std::auto_ptr<Dx11DemoBase> demo( new TextureDemo() );
+	std::auto_ptr<Dx11DemoBase> demo( new GameSpriteDemo() );
 	// Demo init
 	bool result = demo->Initialize( hInstance, hwnd );
 
@@ -51,6 +52,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 
 	MSG msg = { 0 };
 
+	clock_t baseTime = clock();
+
 	while( msg.message != WM_QUIT )
 	{
 		if( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
@@ -60,7 +63,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 		}
 
 		// Update and draw
-		demo->Update( 0.0f );
+		if( clock() > ( baseTime + (CLOCKS_PER_SEC/120) ) )
+		{
+			baseTime = clock();
+			demo->Update( 0.0f );
+		}
 		demo->Render();
 	}
 

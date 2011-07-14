@@ -1,3 +1,8 @@
+cbuffer cbChangesPerFrame : register( b0 )
+{
+	matrix mvp_;
+};
+
 Texture2D colorMap_ : register( t0 );
 SamplerState colorSampler_ : register( s0 );
 
@@ -16,7 +21,7 @@ struct PS_Input
 PS_Input VS_Main( VS_Input vertex )
 {
 	PS_Input vsOut = ( PS_Input )0;
-	vsOut.pos = vertex.pos;
+	vsOut.pos = mul( vertex.pos, mvp_ );
 	vsOut.tex0 = vertex.tex0;
 
 	return vsOut;
