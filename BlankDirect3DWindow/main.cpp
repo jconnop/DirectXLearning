@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <memory>
-#include "BlankDemo.h"
+#include "TextureDemo.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -39,7 +39,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 	ShowWindow( hwnd, cmdShow );
 
 	
-	std::auto_ptr<Dx11DemoBase> demo( new BlankDemo() );
+	std::auto_ptr<Dx11DemoBase> demo( new TextureDemo() );
 	// Demo init
 	bool result = demo->Initialize( hInstance, hwnd );
 
@@ -58,12 +58,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
 		}
-		else
-		{
-			// Update and draw
-			demo->Update( 0.0f );
-			demo->Render();
-		}
+
+		// Update and draw
+		demo->Update( 0.0f );
+		demo->Render();
 	}
 
 	// Demo shutdown

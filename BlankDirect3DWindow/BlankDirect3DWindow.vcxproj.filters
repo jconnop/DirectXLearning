@@ -18,19 +18,24 @@
     <ClCompile Include="Dx11DemoBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BlankDemo.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="TextureDemo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx11DemoBase.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BlankDemo.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="TextureDemo.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SolidGreenColor.fx">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

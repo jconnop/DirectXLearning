@@ -2,7 +2,7 @@
 #define _DEMO_BASE_H_
 
 #include <d3d11.h>
-#include <D3DX11.h>
+#include <d3dx11.h>
 #include <DxErr.h>
 
 
@@ -14,6 +14,9 @@ class Dx11DemoBase
 
 		bool Initialize( HINSTANCE hInstance, HWND hwnd);
 		void Shutdown();
+
+		bool CompileD3DShader( char* filePath, char* entry,
+			char* shaderModel, ID3DBlob** buffer );
 
 		virtual bool LoadContent();
 		virtual void UnloadContent();
