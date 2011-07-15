@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <memory>
-#include "TextureDemo.h"
+#include "D3DTextDemo.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -28,7 +28,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 	RECT rc = { 0, 0, 640, 480 };
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, false);
 
-	HWND hwnd = CreateWindow( "DX11BookWindowClass", "Blank Direct3D 11 Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
+	HWND hwnd = CreateWindow( "DX11BookWindowClass", "D3DTextDemo", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
 								rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
 	if(!hwnd)
@@ -39,7 +39,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 	ShowWindow( hwnd, cmdShow );
 
 	
-	std::auto_ptr<Dx11DemoBase> demo( new TextureDemo() );
+	std::auto_ptr<Dx11DemoBase> demo( new D3DTextDemo() );
 	// Demo init
 	bool result = demo->Initialize( hInstance, hwnd );
 

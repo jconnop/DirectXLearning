@@ -1,4 +1,4 @@
-#include "TextureDemo.h"
+#include "D3DTextDemo.h"
 #include <xnamath.h>
 
 struct VertexPos
@@ -7,19 +7,19 @@ struct VertexPos
 	XMFLOAT2 tex0;
 };
 
-TextureDemo::TextureDemo() : solidColorVS_(0), solidColorPS_(0),
+D3DTextDemo::D3DTextDemo() : solidColorVS_(0), solidColorPS_(0),
 								inputLayout_(0), vertexBuffer_(0),
 								colorMap_(0), colorMapSampler_(0)
 {
 
 }
 
-TextureDemo::~TextureDemo()
+D3DTextDemo::~D3DTextDemo()
 {
 
 }
 
-void TextureDemo::UnloadContent()
+void D3DTextDemo::UnloadContent()
 {
 	if( colorMapSampler_ ) colorMapSampler_->Release();
 	if( colorMap_ ) colorMap_->Release();
@@ -37,12 +37,12 @@ void TextureDemo::UnloadContent()
 	vertexBuffer_ = 0;
 }
 
-void TextureDemo::Update( float dt )
+void D3DTextDemo::Update( float dt )
 {
 
 }
 
-bool TextureDemo::LoadContent()
+bool D3DTextDemo::LoadContent()
 {
 	ID3DBlob* vsBuffer = 0;
 	
@@ -180,7 +180,7 @@ bool TextureDemo::LoadContent()
 }
 
 
-void TextureDemo::Render()
+void D3DTextDemo::Render()
 {
 	if( d3dContext_ == 0 )
 	{

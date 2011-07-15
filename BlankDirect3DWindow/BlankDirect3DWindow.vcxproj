@@ -77,14 +77,14 @@
   <ItemGroup>
     <ClCompile Include="Dx11DemoBase.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TextureDemo.cpp" />
+    <ClCompile Include="D3DTextDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx11DemoBase.h" />
-    <ClInclude Include="TextureDemo.h" />
+    <ClInclude Include="D3DTextDemo.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SolidGreenColor.fx" />
+    <None Include="Shaders.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

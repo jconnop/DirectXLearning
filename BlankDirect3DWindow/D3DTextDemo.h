@@ -3,11 +3,11 @@
 
 #include "Dx11DemoBase.h"
 
-class TextureDemo : public Dx11DemoBase
+class D3DTextDemo : public Dx11DemoBase
 {
 	public:
-		TextureDemo();
-		virtual ~TextureDemo();
+		D3DTextDemo();
+		virtual ~D3DTextDemo();
 
 		bool LoadContent();
 		void UnloadContent();
