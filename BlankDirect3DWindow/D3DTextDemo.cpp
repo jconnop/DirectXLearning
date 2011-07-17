@@ -117,39 +117,8 @@ bool D3DTextDemo::LoadContent()
 	}
 
 
-	// Load geometry
-    VertexPos vertices[] =
-    {
-        { XMFLOAT3(  1.0f,  1.0f, 1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3(  1.0f, -1.0f, 1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
-
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f,  1.0f, 1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3(  1.0f,  1.0f, 1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-    };
-
-	D3D11_BUFFER_DESC vertexDesc;
-	ZeroMemory( &vertexDesc, sizeof( vertexDesc ) );
-
-	vertexDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexDesc.ByteWidth = sizeof( VertexPos ) * ARRAYSIZE( vertices );
-
-	D3D11_SUBRESOURCE_DATA resourceData;
-	ZeroMemory( &resourceData, sizeof( resourceData ) );
-	resourceData.pSysMem = vertices;
-
-	d3dResult = d3dDevice_->CreateBuffer( &vertexDesc,
-		&resourceData, &vertexBuffer_ );
-
-	if( FAILED( d3dResult ) )
-	{
-		return false;
-	}
-
 	d3dResult = D3DX11CreateShaderResourceViewFromFile( d3dDevice_, 
-		"face.png", 0, 0, &colorMap_, 0 );
+		"font.dds", 0, 0, &colorMap_, 0 );
 
 	if( FAILED( d3dResult ) )
 	{
@@ -175,6 +144,24 @@ bool D3DTextDemo::LoadContent()
 		return false;
 	}
 
+	D3D11_BUFFER_DESC vertexDesc;
+	ZeroMemory( &vertexDesc, sizeof( vertexDesc ) );
+	vertexDesc.Usage = D3D11_USAGE_DYNAMIC;
+	vertexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vertexDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	const int sizeOfSprite = sizeof( VertexPos ) * 6;
+	const int maxLetters = 100000;
+
+	vertexDesc.ByteWidth = sizeOfSprite * maxLetters;
+
+	d3dResult = d3dDevice_->CreateBuffer( &vertexDesc, 0, &vertexBuffer_ );
+
+	if( FAILED( d3dResult ) )
+	{
+		DXTRACE_MSG( "Failed to create vertex buffer!" );
+		return false;
+	}
 
 	return true;
 }
@@ -187,7 +174,7 @@ void D3DTextDemo::Render()
 		return;
 	}
 
-	float clearColor[4] = { 0.0f, 0.0f, 0.25f, 1.0f };
+	float clearColor[4] = { 0.2f, 0.22f, 0.24f, 1.0f };
 	d3dContext_->ClearRenderTargetView( backBufferTarget_, clearColor );
 
 	unsigned int stride = sizeof( VertexPos );
@@ -201,8 +188,97 @@ void D3DTextDemo::Render()
 	d3dContext_->PSSetShader( solidColorPS_, 0, 0);
 	d3dContext_->PSSetShaderResources( 0, 1, &colorMap_ );
 	d3dContext_->PSSetSamplers( 0, 1, &colorMapSampler_ );
-	d3dContext_->Draw( 6, 0);
+
+	DrawString( "HELLO WORLD", -1.0f, 0.0f );
 
 	swapChain_->Present( 0, 0 );
+
+}
+
+bool D3DTextDemo::DrawString( char* message, float startX, float startY )
+{
+	// Size in bytes for a single sprite.
+	const int sizeOfSprite = sizeof( VertexPos ) * 6;
+
+	// Demo's dynamic buffer set up for max of 24 letters.
+	const int maxLetters = 10000;
+
+	int length = strlen( message );
+
+	// Clamp for strings too long.
+	if( length > maxLetters )
+	{
+		length = maxLetters;
+	}
+
+	// Char's width in screen coordinates.
+	float charWidth = 32.0f / 800.0f;
+
+	// Char's height in screen coordinates.
+	float charHeight = 32.0f / 600.0f;
+
+	// Char's width in texture coordinates.
+	float texelWidth = 32.0f / 864.0f;
+
+	const int verticesPerLetter = 6;
+
+
+	D3D11_MAPPED_SUBRESOURCE mapResource;
+	HRESULT d3dResult = d3dContext_->Map( vertexBuffer_, 0,
+		D3D11_MAP_WRITE_DISCARD, 0, &mapResource );
+
+	if( FAILED( d3dResult ) )
+	{
+		DXTRACE_MSG( "Failed to map resource!" );
+		return false;
+	}
+
+	// Point to our vertex buffer's internal data.
+	VertexPos* spritePtr = ( VertexPos* )mapResource.pData;
+	const int indexA = static_cast<char>( 'A' );
+	const int indexZ = static_cast<char>( 'Z' );
+
+	for( int i = 0; i < length; i++ )
+	{
+		float thisStartX = startX + ( charWidth * static_cast<float>( i ) );
+		float thisEndX = thisStartX + charWidth;
+		float thisEndY = startY + charHeight;
+
+        spritePtr[0].pos = XMFLOAT3( thisEndX,   thisEndY, 1.0f );
+        spritePtr[1].pos = XMFLOAT3( thisEndX,   startY,   1.0f );
+        spritePtr[2].pos = XMFLOAT3( thisStartX, startY,   1.0f );
+        spritePtr[3].pos = XMFLOAT3( thisStartX, startY,   1.0f );
+        spritePtr[4].pos = XMFLOAT3( thisStartX, thisEndY, 1.0f );
+        spritePtr[5].pos = XMFLOAT3( thisEndX,   thisEndY, 1.0f );
+
+		int texLookup = 0;
+		int letter = static_cast<char>( message[i] );
+
+		if( letter < indexA || letter > indexZ )
+		{
+			texLookup = indexZ - indexA + 1;
+		}
+		else
+		{
+			texLookup = letter - indexA;
+		}
+
+		float tuStart = 0.0f + ( texelWidth * static_cast<float>( texLookup ) );
+		float tuEnd = tuStart + texelWidth;
+
+		spritePtr[0].tex0 = XMFLOAT2( tuEnd, 0.0f );
+        spritePtr[1].tex0 = XMFLOAT2( tuEnd, 1.0f );
+        spritePtr[2].tex0 = XMFLOAT2( tuStart, 1.0f );
+        spritePtr[3].tex0 = XMFLOAT2( tuStart, 1.0f );
+        spritePtr[4].tex0 = XMFLOAT2( tuStart, 0.0f );
+        spritePtr[5].tex0 = XMFLOAT2( tuEnd, 0.0f );
+
+        spritePtr += 6;
+	}
+
+	d3dContext_->Unmap( vertexBuffer_, 0 );
+	d3dContext_->Draw( 6 * length, 0 );
+
+	return true;
 
 }

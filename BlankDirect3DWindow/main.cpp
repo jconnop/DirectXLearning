@@ -25,7 +25,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 		return -1;
 	}
 
-	RECT rc = { 0, 0, 640, 480 };
+	RECT rc = { 0, 0, 800, 600 };
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, false);
 
 	HWND hwnd = CreateWindow( "DX11BookWindowClass", "D3DTextDemo", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
